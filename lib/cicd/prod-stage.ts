@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import {Construct} from 'constructs';
 import * as logs from 'aws-cdk-lib/aws-logs';
-import {LambdaStack} from "../../../stacks/lambda-stack";
+import { LambdaStack } from '../compute/lambda/lambda-stack';
 
 interface MyProps extends cdk.StageProps {
     LogGroup?: logs.ILogGroup,
