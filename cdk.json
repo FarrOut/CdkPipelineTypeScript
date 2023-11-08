@@ -1,4 +1,13 @@
 {
+  "profile": "default",
+  "requireApproval": "never",
+  "rollback": true,
+  "tags": [
+    {
+      "Key": "BelongsTo",
+      "Value": "CdkPipelineTypeScript"
+    }
+  ],
   "app": "npx ts-node --prefer-ts-exts bin/cdk_pipeline_type_script.ts",
   "watch": {
     "include": [
