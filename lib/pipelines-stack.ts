@@ -42,7 +42,7 @@ export class PipelinesStack extends cdk.Stack {
             //     'npm install -g aws-cdk',
             // ],
             commands:
-                [`cd ${props.SubDir}`, `pwd`,
+                [ `pwd`,
                     'npm ci', `npx cdk --version`,
                     'npm run build',
                     `npx cdk synth ${this.stackName}`],
@@ -50,7 +50,7 @@ export class PipelinesStack extends cdk.Stack {
              * We need to define 'primaryOutputDirectory' because
              * our CDK app is not in the root of the project structure.
              */
-            primaryOutputDirectory: `${props.SubDir}/cdk.out`,
+            // primaryOutputDirectory: `${props.SubDir}/cdk.out`,
         })
 
         this.pipeline = new CodePipeline(this, 'Pipeline', {
@@ -103,7 +103,7 @@ export class PipelinesStack extends cdk.Stack {
                     'echo "Let\'s run some integration tests!!"',
                 ],
                 env: {},
-                primaryOutputDirectory: `${props.SubDir}/cdk.out`,
+                // primaryOutputDirectory: `${props.SubDir}/cdk.out`,
             }),
         )
         testingWave.addStage(new MyApplicationStage(this, 'TestingStageBeta',
@@ -120,7 +120,7 @@ export class PipelinesStack extends cdk.Stack {
                     'npx cdk ls',
                 ],
                 env: {},
-                primaryOutputDirectory: `${props.SubDir}/cdk.out`,
+                // primaryOutputDirectory: `${props.SubDir}/cdk.out`,
             }),
         )
         testingWave.addStage(new MyApplicationStage(this, 'TestingStageGamma',
