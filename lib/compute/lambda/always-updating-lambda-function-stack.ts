@@ -10,7 +10,7 @@ interface MyProps {
     removalPolicy: cdk.RemovalPolicy,
 }
 
-export class LambdaNestedStack extends NestedStack {
+export class AlwaysUpdatingLambdaFunctionStack extends NestedStack {
 
     public readonly function: lambda_.IFunction;
 
