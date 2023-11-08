@@ -13,7 +13,7 @@ const default_env = {
 new PipelinesStack(app, 'Pipelines', {
   env: default_env,
 
-  BranchName: 'main',
+  BranchName: 'dev',
   RepositoryOwner: 'FarrOut',
   RepositoryName: 'CdkPipelineTypeScript',
   removalPolicy: cdk.RemovalPolicy.DESTROY,  
