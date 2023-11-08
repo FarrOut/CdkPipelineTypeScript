@@ -119,7 +119,6 @@ export class PipelinesStack extends cdk.Stack {
                 ],
                 commands: [
                     'echo "Let\'s run some smoke tests!!"',
-                    'npx cdk ls',
                 ],
                 env: {},
                 // primaryOutputDirectory: `${props.SubDir}/cdk.out`,
