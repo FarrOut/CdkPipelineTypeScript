@@ -61,6 +61,8 @@ export class PipelinesStack extends cdk.Stack {
 
             synth: synthStep,
             codeBuildDefaults: {
+                // cache: codebuild.Cache.local(codebuild.LocalCacheMode.CUSTOM),
+
                 buildEnvironment: {
                     // privileged: true,
                     buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
