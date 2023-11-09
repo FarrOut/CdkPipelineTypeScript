@@ -1,13 +1,14 @@
 import * as cdk from 'aws-cdk-lib';
-import {Construct} from 'constructs';
+import { Construct } from 'constructs';
 import * as logs from 'aws-cdk-lib/aws-logs';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
-import {CodePipeline, CodePipelineSource, ShellStep, CodeBuildStep, ManualApprovalStep} from 'aws-cdk-lib/pipelines';
+import { CodePipeline, CodePipelineSource, ShellStep, CodeBuildStep, Artifact, ManualApprovalStep } from 'aws-cdk-lib/pipelines';
 import * as codebuild from 'aws-cdk-lib/aws-codebuild';
 import * as s3 from 'aws-cdk-lib/aws-s3';
 import { LogGroupNestedStack } from './logging/log-group-nestedstack';
 import { S3NestedStack } from './storage/s3-nestedstack';
 import { MyApplicationStage } from './cicd/my-application-stage';
+import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
 
 interface PipelinesProps extends cdk.StackProps {
     RepositoryOwner: string,
@@ -28,7 +29,7 @@ export class PipelinesStack extends cdk.Stack {
         super(scope, id, props);
 
         props.LogGroup = new LogGroupNestedStack(this, 'LogGroupNestedStack',
-            {removalPolicy: props.removalPolicy, retention: logs.RetentionDays.ONE_WEEK}).logGroup
+            { removalPolicy: props.removalPolicy, retention: logs.RetentionDays.ONE_WEEK }).logGroup
 
         props.artifactBucket = new S3NestedStack(this, 'ArtifactBucketNestedStack', {
             removalPolicy: props.removalPolicy,
@@ -36,13 +37,28 @@ export class PipelinesStack extends cdk.Stack {
             bucketName: cdk.PhysicalName.GENERATE_IF_NEEDED,
         }).bucket
 
+        /*
+        const AssetBucket = new s3deploy.BucketDeployment(this, 'AssetBucket', {
+            sources: [s3deploy.Source.asset('./assets')],
+            destinationBucket: props.artifactBucket,
+            destinationKeyPrefix: 'scripts', // optional prefix in destination bucket
+            retainOnDelete: false,
+        });
+        const AssetArtifact = new Artifact(
+            {
+                artifactName: 'AssetArtifact',
+            }
+        );
+        */
+
+        const source = CodePipelineSource.gitHub(props.RepositoryOwner + '/' + props.RepositoryName, props.BranchName)
         const synthStep = new ShellStep('Synth', {
-            input: CodePipelineSource.gitHub(props.RepositoryOwner + '/' + props.RepositoryName, props.BranchName),
+            input: source,
             // installCommands: [`cd ${SubDir}`, `pwd`, `ls -la`,
             //     'npm install -g aws-cdk',
             // ],
             commands:
-                [ `pwd`,
+                [`pwd`,
                     'npm ci', `npx cdk --version`,
                     'npm run build',
                     `npx cdk synth ${this.stackName}`],
@@ -65,7 +81,7 @@ export class PipelinesStack extends cdk.Stack {
 
                 buildEnvironment: {
                     // privileged: true,
-                    buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
+                    buildImage: codebuild.WindowsBuildImage.WINDOWS_BASE_2_0,
                     // computeType: codebuild.ComputeType.MEDIUM,
                 },
                 partialBuildSpec: codebuild.BuildSpec.fromObject({
@@ -95,35 +111,38 @@ export class PipelinesStack extends cdk.Stack {
             {
                 removalPolicy: props.removalPolicy,
             })).addPost(
-            new CodeBuildStep('RunIntegrationTests', {
-                input: synthStep,
-                installCommands: [
-                    'ls -la', `pwd`,
-                    'sudo apt-get install jq'
-                ],
-                commands: [
-                    'echo "Let\'s run some integration tests!!"',
-                ],
-                env: {},
-                // primaryOutputDirectory: `${props.SubDir}/cdk.out`,
-            }),
-        )
+                new CodeBuildStep('RunIntegrationTests', {
+                    input: synthStep,
+                    installCommands: [
+                        'ls -la', `pwd`,
+                        'sudo apt-get install jq'
+                    ],
+                    commands: [
+                        'echo "Let\'s run some integration tests!!"',
+                    ],
+                    env: {},
+                    // primaryOutputDirectory: `${props.SubDir}/cdk.out`,
+                }),
+            )
         testingWave.addStage(new MyApplicationStage(this, 'TestingStageBeta',
             {
                 removalPolicy: props.removalPolicy,
             })).addPost(
-            new CodeBuildStep('RunSmokeTests', {
-                input: synthStep,
-                installCommands: [
-                    'ls -la', `pwd`,
-                ],
-                commands: [
-                    'echo "Let\'s run some smoke tests!!"',
-                ],
-                env: {},
-                // primaryOutputDirectory: `${props.SubDir}/cdk.out`,
-            }),
-        )
+                new ShellStep('RunSmokeTests', {
+                    input: source,
+                    installCommands: [
+                        'ls -la', `pwd`,
+                    ],
+                    commands: [
+                        'echo "Let\'s run some smoke tests!!"',
+                        "ls -la",
+                        "pwd",
+                        "Invoke-Command -FilePath '..//assets//scripts//simple.ps1'"
+                    ],
+                    env: {},
+                    // primaryOutputDirectory: `${props.SubDir}/cdk.out`,
+                }),
+            )
         testingWave.addStage(new MyApplicationStage(this, 'TestingStageGamma',
             {
                 removalPolicy: props.removalPolicy,
@@ -148,4 +167,3 @@ export class PipelinesStack extends cdk.Stack {
         )
     }
 }
-     
