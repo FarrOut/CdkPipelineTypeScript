@@ -82,7 +82,7 @@ export class PipelinesStack extends cdk.Stack {
                 buildEnvironment: {
                     // privileged: true,
                     buildImage: codebuild.WindowsBuildImage.WINDOWS_BASE_2_0,
-                    // computeType: codebuild.ComputeType.MEDIUM,
+                    computeType: codebuild.ComputeType.MEDIUM,
                 },
                 partialBuildSpec: codebuild.BuildSpec.fromObject({
                     env: {
