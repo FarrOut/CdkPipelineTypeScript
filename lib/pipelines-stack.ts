@@ -81,7 +81,7 @@ export class PipelinesStack extends cdk.Stack {
 
                 buildEnvironment: {
                     // privileged: true,
-                    buildImage: codebuild.WindowsBuildImage.WINDOWS_BASE_2_0,
+                    buildImage: codebuild.WindowsBuildImage.WIN_SERVER_CORE_2019_BASE,
                     computeType: codebuild.ComputeType.MEDIUM,
                 },
                 partialBuildSpec: codebuild.BuildSpec.fromObject({
