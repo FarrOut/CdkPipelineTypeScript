@@ -125,6 +125,7 @@ export class PipelinesStack extends cdk.Stack {
                         "pwd",
                         "ls",                        
                         "tree",
+                        "cat tree.json",
                         "Invoke-Command -FilePath '..\\assets\\scripts\\simple.ps1'"
                     ],
                     buildEnvironment: {
