@@ -79,10 +79,7 @@ export class PipelinesStack extends cdk.Stack {
 
                 buildEnvironment: {
                     // privileged: true,
-                    buildImage: codebuild.WindowsBuildImage.fromDockerRegistry(
-                        "mcr.microsoft.com/dotnet/framework/sdk:4.8", {},
-                        codebuild.WindowsImageType.SERVER_2019,
-                    ),
+                    buildImage: codebuild.LinuxBuildImage.STANDARD_7_0,
                     computeType: codebuild.ComputeType.MEDIUM,
                 },
                 partialBuildSpec: codebuild.BuildSpec.fromObject({
@@ -128,8 +125,16 @@ export class PipelinesStack extends cdk.Stack {
                     ],
                     commands: [
                         'echo "Let\'s run some integration tests!!"',
+                        "ls -la",
+                        "pwd",
+                        "Invoke-Command -FilePath '..//assets//scripts//simple.ps1'"
                     ],
-                    env: {},
+                    buildEnvironment: {
+                        buildImage: codebuild.WindowsBuildImage.fromDockerRegistry(
+                            "mcr.microsoft.com/dotnet/framework/sdk:4.8", {},
+                            codebuild.WindowsImageType.SERVER_2019,
+                        ),
+                    },
                     // primaryOutputDirectory: `${props.SubDir}/cdk.out`,
                 }),
             )
@@ -143,10 +148,7 @@ export class PipelinesStack extends cdk.Stack {
                         'ls -la', `pwd`,
                     ],
                     commands: [
-                        'echo "Let\'s run some smoke tests!!"',
-                        "ls -la",
-                        "pwd",
-                        "Invoke-Command -FilePath '..//assets//scripts//simple.ps1'"
+                        'echo "Let\'s run some smoke tests!!"'
                     ],
                     env: {},
                     // primaryOutputDirectory: `${props.SubDir}/cdk.out`,
