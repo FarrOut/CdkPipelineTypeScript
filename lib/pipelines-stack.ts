@@ -54,7 +54,7 @@ export class PipelinesStack extends cdk.Stack {
         const source = CodePipelineSource.gitHub(props.RepositoryOwner + '/' + props.RepositoryName, props.BranchName)
         const synthStep = new ShellStep('Synth', {
             input: source,
-            installCommands: ['npm i -g npm@latest'],
+            // installCommands: ['npm i -g npm@latest'],
             commands:
                 [`pwd`,
                     'npm ci', `npx cdk --version`,
