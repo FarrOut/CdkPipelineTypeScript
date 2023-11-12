@@ -53,7 +53,7 @@ export class PipelinesStack extends cdk.Stack {
 
         const source = CodePipelineSource.gitHub(props.RepositoryOwner + '/' + props.RepositoryName, props.BranchName)
         const synthStep = new ShellStep('Synth', {
-            input: source,            
+            input: source,
             installCommands: ['npm i -g npm@latest'],
             commands:
                 [`pwd`,
@@ -79,7 +79,10 @@ export class PipelinesStack extends cdk.Stack {
 
                 buildEnvironment: {
                     // privileged: true,
-                    buildImage: codebuild.WindowsBuildImage.WIN_SERVER_CORE_2019_BASE,
+                    buildImage: codebuild.WindowsBuildImage.fromDockerRegistry(
+                        "mcr.microsoft.com/dotnet/framework/sdk:4.8", {},
+                        codebuild.WindowsImageType.SERVER_2019,
+                    ),
                     computeType: codebuild.ComputeType.MEDIUM,
                 },
                 partialBuildSpec: codebuild.BuildSpec.fromObject({
