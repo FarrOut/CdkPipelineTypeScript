@@ -119,9 +119,7 @@ export class PipelinesStack extends cdk.Stack {
             })).addPost(
                 new CodeBuildStep('RunIntegrationTests', {
                     input: synthStep,
-                    installCommands: [
-                        'sudo apt-get install jq'
-                    ],
+                    installCommands: [],
                     commands: [
                         'echo "Let\'s run some integration tests!!"',
                         "ls",
