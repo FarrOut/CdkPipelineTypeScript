@@ -93,6 +93,14 @@ export class PipelinesStack extends cdk.Stack {
                             // NODE_VERSION: '16',
                         },
                     },
+                    version: "0.2",
+                    phases: {
+                        install: {
+                            "runtime-versions": {
+                                nodejs: "latest",
+                            },
+                        },
+                    },
                 }),
                 logging: {
                     cloudWatch: {
