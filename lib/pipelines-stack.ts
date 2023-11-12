@@ -125,7 +125,7 @@ export class PipelinesStack extends cdk.Stack {
                     ],
                     commands: [
                         'echo "Let\'s run some integration tests!!"',
-                        "ls -la",
+                        "ls",
                         "pwd",
                         "Invoke-Command -FilePath '..//assets//scripts//simple.ps1'"
                     ],
