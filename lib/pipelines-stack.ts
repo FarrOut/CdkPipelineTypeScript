@@ -122,9 +122,10 @@ export class PipelinesStack extends cdk.Stack {
                     installCommands: [],
                     commands: [
                         'echo "Let\'s run some integration tests!!"',
-                        "ls",
                         "pwd",
-                        "Invoke-Command -FilePath '..//assets//scripts//simple.ps1'"
+                        "ls",                        
+                        "tree",
+                        "Invoke-Command -FilePath '..\\assets\\scripts\\simple.ps1'"
                     ],
                     buildEnvironment: {
                         buildImage: codebuild.WindowsBuildImage.fromDockerRegistry(
