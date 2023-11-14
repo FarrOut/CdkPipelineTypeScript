@@ -37,19 +37,13 @@ export class PipelinesStack extends cdk.Stack {
             bucketName: cdk.PhysicalName.GENERATE_IF_NEEDED,
         }).bucket
 
-        /*
+        
         const AssetBucket = new s3deploy.BucketDeployment(this, 'AssetBucket', {
             sources: [s3deploy.Source.asset('./assets')],
             destinationBucket: props.artifactBucket,
-            destinationKeyPrefix: 'scripts', // optional prefix in destination bucket
+            destinationKeyPrefix: 'assets', // optional prefix in destination bucket
             retainOnDelete: false,
         });
-        const AssetArtifact = new Artifact(
-            {
-                artifactName: 'AssetArtifact',
-            }
-        );
-        */
 
         const source = CodePipelineSource.gitHub(props.RepositoryOwner + '/' + props.RepositoryName, props.BranchName)
         const synthStep = new ShellStep('Synth', {
