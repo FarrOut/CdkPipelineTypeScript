@@ -91,14 +91,7 @@ export class PipelinesStack extends cdk.Stack {
                                 nodejs: "latest",
                             },
                         },
-                    },
-                    artifacts: codebuild.Artifacts.s3({
-                        bucket: props.artifactBucket,
-                        includeBuildId: false,                        
-                        packageZip: false,
-                        path: 'scripts\\',
-                        identifier: 'Scripts',
-                      }),
+                    }
                 }),
                 logging: {
                     cloudWatch: {
