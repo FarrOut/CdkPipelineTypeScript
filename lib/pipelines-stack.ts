@@ -41,7 +41,7 @@ export class PipelinesStack extends cdk.Stack {
         const AssetBucket = new s3deploy.BucketDeployment(this, 'AssetBucket', {
             sources: [s3deploy.Source.asset('./assets')],
             destinationBucket: props.artifactBucket,
-            destinationKeyPrefix: 'assets', // optional prefix in destination bucket
+            // destinationKeyPrefix: 'assets', // optional prefix in destination bucket
             retainOnDelete: false,
         });
 
@@ -118,6 +118,7 @@ export class PipelinesStack extends cdk.Stack {
                         'echo "Let\'s run some integration tests!!"',
                         "ls",
                         "tree",
+                        "gci -recurse -filter \"simple.ps1\" -File",
                         "Invoke-Command -FilePath '.\\scripts\\simple.ps1'"
                     ],
                     buildEnvironment: {
