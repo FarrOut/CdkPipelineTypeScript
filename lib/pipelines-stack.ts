@@ -37,7 +37,7 @@ export class PipelinesStack extends cdk.Stack {
             bucketName: cdk.PhysicalName.GENERATE_IF_NEEDED,
         }).bucket
 
-        
+
         const AssetBucket = new s3deploy.BucketDeployment(this, 'AssetBucket', {
             sources: [s3deploy.Source.asset('./assets')],
             destinationBucket: props.artifactBucket,
@@ -92,6 +92,13 @@ export class PipelinesStack extends cdk.Stack {
                             },
                         },
                     },
+                    artifacts: codebuild.Artifacts.s3({
+                        bucket: props.artifactBucket,
+                        includeBuildId: false,                        
+                        packageZip: false,
+                        path: 'scripts\\',
+                        identifier: 'Scripts',
+                      }),
                 }),
                 logging: {
                     cloudWatch: {
@@ -116,8 +123,7 @@ export class PipelinesStack extends cdk.Stack {
                     installCommands: [],
                     commands: [
                         'echo "Let\'s run some integration tests!!"',
-                        "pwd",
-                        "ls",                        
+                        "ls",
                         "tree",
                         "Invoke-Command -FilePath '.\\scripts\\simple.ps1'"
                     ],
