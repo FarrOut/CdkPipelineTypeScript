@@ -112,7 +112,7 @@ export class PipelinesStack extends cdk.Stack {
                 removalPolicy: props.removalPolicy,
             })).addPost(
                 new CodeBuildStep('RunIntegrationTests', {
-                    input: synthStep,
+                    input: synthStep.addOutputDirectory('scripts'),
                     installCommands: [],
                     commands: [
                         'echo "Let\'s run some integration tests!!"',
